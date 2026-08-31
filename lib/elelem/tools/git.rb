@@ -5,7 +5,7 @@ Elelem::Plugins.register(:git) do |agent|
 
   agent.toolbox.add("git",
     description: "Run git command",
-    params: { command: { type: "string" }, args: { type: "array" } },
+    params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
     required: ["command"]
   ) do |a|
     cmd = a["command"]
