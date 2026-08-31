@@ -6,7 +6,7 @@ Elelem::Plugins.register(:grep) do |agent|
     params: { pattern: { type: "string" }, path: { type: "string" }, glob: { type: "string" } },
     required: ["pattern"]
   ) do |a|
-    path = a["path"] || "."
+    path = a["path"].to_s.empty? ? "." : a["path"]
     glob = a["glob"]
     rg_args = ["rg", "-n", a["pattern"], path]
     rg_args += ["-g", glob] if glob

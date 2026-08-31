@@ -6,7 +6,7 @@ Elelem::Plugins.register(:glob) do |agent|
     params: { pattern: { type: "string" }, path: { type: "string" } },
     required: ["pattern"]
   ) do |a|
-    path = a["path"] || "."
+    path = a["path"].to_s.empty? ? "." : a["path"]
     result = agent.toolbox.exec("fd", "--glob", a["pattern"], path)
     result[:ok] ? result : agent.toolbox.exec("find", path, "-name", a["pattern"])
   end
