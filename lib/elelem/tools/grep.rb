@@ -5,17 +5,18 @@ Elelem::Plugins.register(:grep) do |agent|
     description: "Search file contents",
     params: { pattern: { type: "string" }, path: { type: "string" }, glob: { type: "string" } },
     required: ["pattern"]
-  ) do |a|
-    path = a["path"].to_s.empty? ? "." : a["path"]
-    glob = a["glob"]
-    rg_args = ["rg", "-n", a["pattern"], path]
+  ) do |args|
+    path = args["path"].to_s.empty? ? "." : args["path"]
+    glob = args["glob"]
+
+    rg_args = ["rg", "-n", args["pattern"], path]
     rg_args += ["-g", glob] if glob
     result = agent.toolbox.exec(*rg_args)
     next result if result[:ok]
 
     grep_args = ["grep", "-rn"]
     grep_args += ["--include", glob] if glob
-    grep_args += [a["pattern"], path]
+    grep_args += [args["pattern"], path]
     agent.toolbox.exec(*grep_args)
   end
 end

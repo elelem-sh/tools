@@ -5,10 +5,9 @@ Elelem::Plugins.register(:task) do |agent|
     description: "Delegate subtask to focused agent (complex searches, multi-file analysis)",
     params: { prompt: { type: "string" } },
     required: ["prompt"]
-  ) do |a|
-    sub = Elelem::Agent.new(agent.client, toolbox: agent.toolbox, terminal: agent.terminal,
-      system_prompt: "Research agent. Search, analyze, report. Be concise.")
-    sub.turn(a["prompt"])
+  ) do |args|
+    sub = agent.fork(system_prompt: "Research agent. Search, analyze, report. Be concise.")
+    sub.turn(args["prompt"])
     { result: sub.conversation.last[:content] }
   end
 end

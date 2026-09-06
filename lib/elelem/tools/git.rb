@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
 Elelem::Plugins.register(:git) do |agent|
-  allowed = %w[status diff log show branch checkout add reset stash].freeze
-
   agent.toolbox.add("git",
     description: "Run git command",
     params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
     required: ["command"]
-  ) do |a|
-    cmd = a["command"]
-    next { error: "not allowed: #{cmd}" } unless allowed.include?(cmd)
-
-    agent.toolbox.exec("git", cmd, *(a["args"] || []))
+  ) do |args|
+    agent.toolbox.exec("git", args["command"], *(args["args"] || []))
   end
 
   agent.toolbox.after("git") do |_, result|

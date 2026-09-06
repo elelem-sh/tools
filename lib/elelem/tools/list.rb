@@ -6,9 +6,9 @@ Elelem::Plugins.register(:list) do |agent|
     params: { path: { type: "string" }, recursive: { type: "boolean" } },
     required: [],
     aliases: ["ls"]
-  ) do |a|
-    path = a["path"] && !a["path"].empty? ? a["path"] : "."
-    flags = a["recursive"] ? "-laR" : "-la"
+  ) do |args|
+    path = args["path"] && !args["path"].empty? ? args["path"] : "."
+    flags = args["recursive"] ? "-laR" : "-la"
     agent.toolbox.exec("ls", flags, path)
   end
 end
