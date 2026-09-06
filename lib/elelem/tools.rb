@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require "elelem/plugins"
+
+require_relative "tools/version"
+require_relative "tools/compact"
+require_relative "tools/edit"
+require_relative "tools/eval"
+require_relative "tools/git"
+require_relative "tools/glob"
+require_relative "tools/grep"
+require_relative "tools/init"
+require_relative "tools/interview"
+require_relative "tools/list"
+require_relative "tools/shell"
+require_relative "tools/task"
+require_relative "tools/verify"

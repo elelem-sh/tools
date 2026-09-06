@@ -1,0 +1,30 @@
+# frozen_string_literal: true
+
+require_relative "lib/elelem/tools/version"
+
+Gem::Specification.new do |spec|
+  spec.name = "elelem-tools"
+  spec.version = Elelem::Tools::VERSION
+  spec.authors = ["mo khan"]
+  spec.email = ["mo@mokhan.ca"]
+
+  spec.summary = "Optional git, search, and workflow tools for elelem."
+  spec.description = "Adds git, glob, grep, shell, eval, task, edit, list, compact, init, " \
+    "interview, and verify tools to elelem."
+  spec.homepage = "https://src.mokhan.ca/elelem/tools"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 4.0.0"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+
+  gemspec = File.basename(__FILE__)
+  spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).reject do |f|
+      (f == gemspec) || f.start_with?(*%w[bin/ Gemfile .gitignore])
+    end
+  end
+  spec.require_paths = ["lib"]
+
+  spec.add_dependency "elelem-plugins", "~> 0.1"
+end
