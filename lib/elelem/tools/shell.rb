@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "tempfile"
-
 Elelem::Plugins.register(:shell) do |agent|
   strip_ansi = ->(text) do
     text

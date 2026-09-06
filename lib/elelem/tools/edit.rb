@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "pathname"
-
 Elelem::Plugins.register(:edit) do |agent|
   agent.toolbox.add("edit",
     description: "Replace first occurrence of text in file",

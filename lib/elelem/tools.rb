@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require "elelem/plugins"
+require "elelem"
+require "pathname"
+require "tempfile"
 
 require_relative "tools/version"
 require_relative "tools/compact"
