@@ -24,6 +24,6 @@ Elelem::Plugins.register(:init) do |agent|
       Keep it minimal. No fluff.
     PROMPT
 
-    agent.fork(system_prompt: system_prompt).turn("Generate AGENTS.md for this project")
+    Elelem::Tools.fork(agent, system_prompt: system_prompt).turn("Generate AGENTS.md for this project")
   end
 end

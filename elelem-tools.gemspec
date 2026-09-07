@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "elelem", "~> 0.10"
+  spec.add_dependency "elelem", "~> 0.11"
   spec.add_dependency "pathname", "~> 0.5"
   spec.add_dependency "tempfile", "~> 0.3"
 end

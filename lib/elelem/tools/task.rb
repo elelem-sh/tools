@@ -6,7 +6,7 @@ Elelem::Plugins.register(:task) do |agent|
     params: { prompt: { type: "string" } },
     required: ["prompt"]
   ) do |args|
-    sub = agent.fork(system_prompt: "Research agent. Search, analyze, report. Be concise.")
+    sub = Elelem::Tools.fork(agent, system_prompt: "Research agent. Search, analyze, report. Be concise.")
     sub.turn(args["prompt"])
     { result: sub.conversation.last[:content] }
   end
