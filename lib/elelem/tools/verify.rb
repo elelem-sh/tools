@@ -35,7 +35,7 @@ Elelem.configure do |config|
     ) do |args|
       path = args["path"]
       Verifiers.for(path).inject({ verified: [] }) do |memo, cmd|
-        agent.output.say agent.toolbox.header("execute", { "command" => cmd })
+        agent.output.doing("execute", { "command" => cmd })
         v = agent.toolbox.run("execute", { "command" => cmd })
         break v.merge(path: path, command: cmd) if v[:exit_status] != 0
 
