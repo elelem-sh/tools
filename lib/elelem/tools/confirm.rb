@@ -5,7 +5,7 @@ Elelem.configure do |config|
     permissions = Elelem::Tools::Permissions.new
 
     agent.toolbox.before do |args, tool_name:|
-      permissions.check(tool_name, args, terminal: agent.terminal)
+      permissions.check(tool_name, args, input: agent.input)
     end
   end
 end

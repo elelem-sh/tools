@@ -9,8 +9,8 @@ Elelem.configure do |config|
       },
       required: ["question"]
     ) do |args|
-      agent.terminal.say(agent.terminal.markdown(args["question"]))
-      { answer: agent.terminal.ask("> ") }
+      agent.output.say(args["question"], as: :markdown)
+      { answer: agent.input.ask("> ") }
     end
   end
 end

@@ -13,12 +13,12 @@ module Elelem
         @rules = rules
       end
 
-      def check(tool_name, args, terminal:)
+      def check(tool_name, args, input:)
         policy = @rules[tool_name.to_sym] || :ask
         case policy
         when :allow then true
         when :deny then raise "Permission denied: #{tool_name}"
-        when :ask then prompt(tool_name, args, terminal)
+        when :ask then prompt(tool_name, args, input)
         end
       end
 
@@ -32,10 +32,10 @@ module Elelem
         {}
       end
 
-      def prompt(tool_name, args, terminal)
-        return true unless terminal.interactive?
+      def prompt(tool_name, args, input)
+        return true unless input.interactive?
 
-        answer = terminal.ask("  Allow? [Y/n] > ")&.downcase
+        answer = input.ask("  Allow? [Y/n] > ")&.downcase
         raise "User denied permission: #{tool_name}" if answer == "n"
 
         true

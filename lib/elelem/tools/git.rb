@@ -11,7 +11,7 @@ Elelem.configure do |config|
     end
 
     agent.toolbox.after("git") do |_, result|
-      agent.terminal.say "  ! #{result[:error]}" if result[:error]
+      agent.output.say "  ! #{result[:error]}" if result[:error]
     end
   end
 end
