@@ -10,7 +10,7 @@ Elelem.configure do |config|
     ) do |args|
       path = args["path"] && !args["path"].empty? ? args["path"] : "."
       flags = args["recursive"] ? "-laR" : "-la"
-      agent.toolbox.exec("ls", flags, path)
+      Elelem::Tools.exec(agent.toolbox, "ls", flags, path)
     end
   end
 end

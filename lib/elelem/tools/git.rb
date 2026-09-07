@@ -7,7 +7,7 @@ Elelem.configure do |config|
       params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
       required: ["command"]
     ) do |args|
-      agent.toolbox.exec("git", args["command"], *(args["args"] || []))
+      Elelem::Tools.exec(agent.toolbox, "git", args["command"], *(args["args"] || []))
     end
 
     agent.toolbox.after("git") do |_, result|

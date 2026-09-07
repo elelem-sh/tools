@@ -8,8 +8,8 @@ Elelem.configure do |config|
       required: ["pattern"]
     ) do |args|
       path = args["path"].to_s.empty? ? "." : args["path"]
-      result = agent.toolbox.exec("fd", "--glob", args["pattern"], path)
-      result[:ok] ? result : agent.toolbox.exec("find", path, "-name", args["pattern"])
+      result = Elelem::Tools.exec(agent.toolbox, "fd", "--glob", args["pattern"], path)
+      result[:ok] ? result : Elelem::Tools.exec(agent.toolbox, "find", path, "-name", args["pattern"])
     end
   end
 end

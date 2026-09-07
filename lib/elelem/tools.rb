@@ -2,6 +2,7 @@
 
 require "elelem"
 require "pathname"
+require "shellwords"
 require "tempfile"
 
 require_relative "tools/version"
@@ -9,6 +10,7 @@ require_relative "tools/compact"
 require_relative "tools/confirm"
 require_relative "tools/edit"
 require_relative "tools/eval"
+require_relative "tools/exec"
 require_relative "tools/fork"
 require_relative "tools/git"
 require_relative "tools/glob"
