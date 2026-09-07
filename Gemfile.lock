@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    elelem-tools (0.1.0)
+    elelem-tools (0.1.1)
       elelem (~> 0.10)
       pathname (~> 0.5)
       tempfile (~> 0.3)
@@ -109,7 +109,7 @@ CHECKSUMS
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   digest (3.2.1) sha256=ab3312b4e272d7d5dc41c564c86a25861a1f34ac5153374199a0b74861395947
   elelem (0.10.0) sha256=de67f3a28351640da471e6e80e7a1d79e83e293cbc502a9e98c3c609cad2e237
-  elelem-tools (0.1.0)
+  elelem-tools (0.1.1)
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   fileutils (1.8.0) sha256=8c6b1df54e2540bdb2f39258f08af78853aa70bad52b4d394bbc6424593c6e02
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
