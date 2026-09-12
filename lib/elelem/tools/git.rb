@@ -3,10 +3,9 @@
 Elelem.configure do |config|
   config.setup(:git) do |agent|
     agent.toolbox.add("git",
-      description: "Run git command",
-      params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
-      required: ["command"]
-    ) do |args|
+                      description: "Run git command",
+                      params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
+                      required: ["command"]) do |args|
       Elelem::Tools.exec(agent.toolbox, "git", args["command"], *(args["args"] || []))
     end
 

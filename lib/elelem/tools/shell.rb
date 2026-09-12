@@ -2,7 +2,7 @@
 
 Elelem.configure do |config|
   config.setup(:shell) do |agent|
-    strip_ansi = ->(text) do
+    strip_ansi = lambda do |text|
       text
         .gsub(/^Script started.*?\n/, "")
         .gsub(/\nScript done.*$/, "")
@@ -11,7 +11,7 @@ Elelem.configure do |config|
         .gsub(/\e[PX^_].*?\e\\/, "")
         .gsub(/\e./, "")
         .gsub(/[\b]/, "")
-        .gsub(/\r/, "")
+        .gsub("\r", "")
     end
 
     agent.commands.register("shell", description: "Start interactive shell") do

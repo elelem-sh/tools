@@ -32,7 +32,7 @@ module Elelem
         {}
       end
 
-      def prompt(tool_name, args, input)
+      def prompt(tool_name, _args, input)
         return true unless input.interactive?
 
         answer = input.ask("  Allow? [Y/n] > ")&.downcase

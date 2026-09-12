@@ -3,10 +3,9 @@
 Elelem.configure do |config|
   config.setup(:grep) do |agent|
     agent.toolbox.add("grep",
-      description: "Search file contents",
-      params: { pattern: { type: "string" }, path: { type: "string" }, glob: { type: "string" } },
-      required: ["pattern"]
-    ) do |args|
+                      description: "Search file contents",
+                      params: { pattern: { type: "string" }, path: { type: "string" }, glob: { type: "string" } },
+                      required: ["pattern"]) do |args|
       path = args["path"].to_s.empty? ? "." : args["path"]
       glob = args["glob"]
 

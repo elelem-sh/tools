@@ -3,11 +3,10 @@
 Elelem.configure do |config|
   config.setup(:list) do |agent|
     agent.toolbox.add("list",
-      description: "List directory contents",
-      params: { path: { type: "string" }, recursive: { type: "boolean" } },
-      required: [],
-      aliases: ["ls"]
-    ) do |args|
+                      description: "List directory contents",
+                      params: { path: { type: "string" }, recursive: { type: "boolean" } },
+                      required: [],
+                      aliases: ["ls"]) do |args|
       path = args["path"] && !args["path"].empty? ? args["path"] : "."
       flags = args["recursive"] ? "-laR" : "-la"
       Elelem::Tools.exec(agent.toolbox, "ls", flags, path)

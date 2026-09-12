@@ -8,7 +8,7 @@ class Verifiers
     ".go" => "go vet %{path}",
     ".rs" => "cargo check --quiet",
     ".ts" => "npx tsc --noEmit %{path}",
-    ".js" => "node --check %{path}",
+    ".js" => "node --check %{path}"
   }.freeze
 
   def self.for(path)
@@ -16,7 +16,7 @@ class Verifiers
 
     cmds = []
     ext = File.extname(path)
-    cmds << (SYNTAX[ext] % { path: path }) if SYNTAX[ext]
+    cmds << format(SYNTAX[ext], path: path) if SYNTAX[ext]
     cmds << test_runner
     cmds.compact
   end
@@ -29,18 +29,16 @@ end
 Elelem.configure do |config|
   config.setup(:verify) do |agent|
     agent.toolbox.add("verify",
-      description: "Verify file syntax and run tests",
-      params: { path: { type: "string" } },
-      required: ["path"]
-    ) do |args|
+                      description: "Verify file syntax and run tests",
+                      params: { path: { type: "string" } },
+                      required: ["path"]) do |args|
       path = args["path"]
-      Verifiers.for(path).inject({ verified: [] }) do |memo, cmd|
+      Verifiers.for(path).each_with_object({ verified: [] }) do |cmd, memo|
         agent.output.doing("execute", { "command" => cmd })
         v = agent.toolbox.run("execute", { "command" => cmd })
         break v.merge(path: path, command: cmd) if v[:exit_status] != 0
 
         memo[:verified] << cmd
-        memo
       end
     end
   end

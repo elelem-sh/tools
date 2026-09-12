@@ -12,11 +12,10 @@ Elelem.configure do |config|
     DESC
 
     agent.toolbox.add("eval",
-      description: description,
-      params: { ruby: { type: "string" } },
-      required: ["ruby"]
-    ) do |args|
-      { result: binding.eval(args["ruby"]) }
+                      description: description,
+                      params: { ruby: { type: "string" } },
+                      required: ["ruby"]) do |args|
+      { result: binding.eval(args["ruby"]) } # rubocop:disable Security/Eval
     end
   end
 end
