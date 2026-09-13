@@ -2,8 +2,8 @@
 
 module Elelem
   module Tools
-    def self.fork(agent, system_prompt:)
-      Elelem::Agent.new(agent.provider, toolbox: agent.toolbox, output: agent.output, input: agent.input, system_prompt: system_prompt)
+    def self.fork(agent, template:)
+      Elelem::Agent.new(agent.provider, toolbox: agent.toolbox, output: agent.output, template: template)
     end
   end
 end

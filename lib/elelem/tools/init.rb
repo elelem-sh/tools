@@ -3,7 +3,7 @@
 Elelem.configure do |config|
   config.setup(:init) do |agent|
     agent.commands.register("init", description: "Generate AGENTS.md") do
-      system_prompt = <<~PROMPT
+      template = <<~PROMPT
         AGENTS.md generator. Analyze codebase and write AGENTS.md to project root.
 
         # AGENTS.md Spec (https://agents.md/)
@@ -25,7 +25,7 @@ Elelem.configure do |config|
         Keep it minimal. No fluff.
       PROMPT
 
-      Elelem::Tools.fork(agent, system_prompt: system_prompt).turn("Generate AGENTS.md for this project")
+      Elelem::Tools.fork(agent, template: template).turn("Generate AGENTS.md for this project")
     end
   end
 end
