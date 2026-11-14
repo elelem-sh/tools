@@ -1,0 +1,10 @@
+{
+  "bootstrap-sha": "b15526735ac2f36abe2ac102d87a484ff3d3916b",
+  "packages": {
+    ".": {
+      "release-type": "ruby",
+      "package-name": "elelem-tools",
+      "version-file": "lib/elelem/tools/version.rb"
+    }
+  }
+}
