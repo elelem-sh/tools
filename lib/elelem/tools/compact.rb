@@ -6,7 +6,7 @@ Elelem.configure do |config|
       response = agent.turn("Summarize: accomplishments, state, next steps. Brief.")
       agent.conversation.clear!
       agent.conversation.add(role: "user", content: "Context: #{response}")
-      agent.output.say "  → compacted"
+      agent.output.say "  -> compacted"
     end
   end
 end
