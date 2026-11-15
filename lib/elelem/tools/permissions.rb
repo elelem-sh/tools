@@ -18,7 +18,7 @@ module Elelem
         case policy
         when :allow then true
         when :deny then raise "Permission denied: #{tool_name}"
-        when :ask then prompt(tool_name, args, input)
+        else prompt(tool_name, args, input)
         end
       end
 
@@ -27,7 +27,10 @@ module Elelem
       def load_config(path)
         return {} unless File.exist?(path)
 
-        JSON.parse(File.read(path)).transform_keys(&:to_sym).transform_values(&:to_sym)
+        data = JSON.parse(File.read(path))
+        return {} unless data.is_a?(Hash)
+
+        data.transform_keys(&:to_sym).transform_values { |v| v.to_s.to_sym }
       rescue JSON::ParserError
         {}
       end

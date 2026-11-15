@@ -44,5 +44,37 @@ RSpec.describe Elelem::Tools::Permissions do
         it { expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/) }
       end
     end
+
+    context "with a misspelled policy on an interactive input" do
+      subject { described_class.new(rules: { execute: :dney }) }
+
+      let(:input) { double(ask: "n", interactive?: true) }
+
+      it "asks" do
+        expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/)
+        expect(input).to have_received(:ask)
+      end
+    end
+  end
+
+  describe "loading a config" do
+    it "asks for a value that is not a string" do
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "permissions.json")
+        File.write(path, '{"execute": false}')
+        rules = subject.send(:load_config, path)
+        input = double(ask: "n", interactive?: true)
+        expect { described_class.new(rules: rules).check("execute", {}, input: input) }
+          .to raise_error(/User denied permission/)
+      end
+    end
+
+    it "ignores a file that is not an object" do
+      Dir.mktmpdir do |dir|
+        path = File.join(dir, "permissions.json")
+        File.write(path, "[]")
+        expect(subject.send(:load_config, path)).to eq({})
+      end
+    end
   end
 end
