@@ -7,10 +7,10 @@ module Elelem
       toolbox.run("execute", { "command" => command })
     end
 
-    # bash exits 127 when the command is not installed. rg exits 1 when
-    # nothing matches, so a non-zero status alone is not a reason to fall back.
+    # bash exits 127 when the command is not installed, 126 when it cannot run
+    # it. rg exits 1 when nothing matches, which is not a reason to fall back.
     def self.missing?(result)
-      result[:exit_status] == 127
+      [126, 127].include?(result[:exit_status])
     end
   end
 end

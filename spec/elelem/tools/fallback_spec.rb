@@ -3,6 +3,7 @@
 RSpec.describe "the grep and glob fallbacks" do
   # A PATH with bash and the fallbacks, but no rg or fd.
   around do |example|
+    original = ENV.fetch("PATH")
     Dir.mktmpdir do |dir|
       bin = File.join(dir, "bin")
       Dir.mkdir(bin)
@@ -11,12 +12,20 @@ RSpec.describe "the grep and glob fallbacks" do
         File.symlink(found, File.join(bin, cmd))
       end
       File.write(File.join(dir, "notes.txt"), "needle\n")
-      original = ENV.fetch("PATH")
       ENV["PATH"] = bin
+      @bin = bin
       Dir.chdir(dir) { example.run }
     ensure
       ENV["PATH"] = original
     end
+  end
+
+  it "does not fall back when rg runs and finds nothing" do
+    File.write(File.join(@bin, "rg"), "#!/bin/sh\nexit 1\n")
+    File.chmod(0o755, File.join(@bin, "rg"))
+    result = run_tool("grep", { "pattern" => "needle" })
+
+    expect([result[:exit_status], result[:content]]).to eq([1, ""])
   end
 
   it "greps with grep when rg is not installed" do
