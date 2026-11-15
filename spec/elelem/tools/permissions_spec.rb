@@ -60,6 +60,22 @@ RSpec.describe Elelem::Tools::Permissions do
         it { expect(subject.check("execute", {}, input: input)).to be true }
       end
 
+      %w[y Y yes YES].each do |yes|
+        context "when the answer is #{yes}" do
+          let(:answer) { yes }
+
+          it { expect(subject.check("execute", {}, input: input)).to be true }
+        end
+      end
+
+      %w[no np nope x].each do |other|
+        context "when the answer is #{other}" do
+          let(:answer) { other }
+
+          it { expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/) }
+        end
+      end
+
       context "with arguments" do
         let(:answer) { "y" }
 

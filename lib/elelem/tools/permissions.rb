@@ -9,6 +9,9 @@ module Elelem
         ".agents/permissions.json"
       ].freeze
 
+      # Enter, y or yes. Anything else refuses: no, a typo, or end of input (Ctrl+D, nil).
+      YES = ["", "y", "yes"].freeze
+
       def initialize(rules: default_rules)
         @rules = rules
       end
@@ -39,8 +42,7 @@ module Elelem
         return true unless input.interactive?
 
         answer = input.ask("  Allow #{tool_name}#{subject(tool_name, args)}? [Y/n] > ")
-        # nil is end of input (Ctrl+D), which refuses. An empty line accepts.
-        raise "User denied permission: #{tool_name}" if answer.nil? || answer.downcase == "n"
+        raise "User denied permission: #{tool_name}" unless YES.include?(answer&.strip&.downcase)
 
         true
       end
