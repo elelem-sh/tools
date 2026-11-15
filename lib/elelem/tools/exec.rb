@@ -2,10 +2,10 @@
 
 module Elelem
   module Tools
-    # git, glob, grep and list run their command through execute. The person
-    # approved the outer call, which shows the same arguments, so asking again
-    # for the command it builds adds a prompt and nothing else. A deny on
-    # execute still applies.
+    # git, glob, grep and list run their command through execute. When a person
+    # was just asked about the outer call, which shows the same arguments, the
+    # command it builds does not ask again. When the outer call was allowed
+    # without asking, the command still asks. A deny on execute always applies.
     def self.exec(toolbox, *args)
       command = args.flatten.map { |a| Shellwords.escape(a.to_s) }.join(" ")
       nested { toolbox.run("execute", { "command" => command }) }
@@ -21,6 +21,14 @@ module Elelem
 
     def self.nested?
       Thread.current[:elelem_tools_nested] == true
+    end
+
+    def self.approved?
+      Thread.current[:elelem_tools_approved] == true
+    end
+
+    def self.approved=(value)
+      Thread.current[:elelem_tools_approved] = value
     end
 
     # rg and grep exit 1 when nothing matches. That is an answer, not a failure.

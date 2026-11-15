@@ -106,25 +106,43 @@ RSpec.describe Elelem::Tools::Permissions do
     end
 
     context "inside a tool that runs its own command" do
-      let(:input) { double(ask: "n", interactive?: true) }
+      let(:input) { double(interactive?: true) }
+      let(:answers) { [] }
 
-      it "does not ask again" do
-        expect(Elelem::Tools.nested { subject.check("execute", {}, input: input) }).to be true
-        expect(input).not_to have_received(:ask)
+      before { allow(input).to receive(:ask) { answers.shift } }
+
+      def run_tool(permissions, name)
+        permissions.check(name, { "pattern" => "x" }, input: input)
+        Elelem::Tools.nested { permissions.check("execute", { "command" => "rg -n x ." }, input: input) }
       end
 
-      it "still refuses a denied tool" do
+      it "does not ask again after the person approved the tool" do
+        answers.push("y")
+
+        expect(run_tool(subject, "grep")).to be true
+        expect(input).to have_received(:ask).once
+      end
+
+      it "still asks for the command when the tool was allowed without asking" do
+        answers.push("n")
+        allowed = described_class.new(rules: { git: :allow })
+
+        expect { run_tool(allowed, "git") }.to raise_error(/User denied permission: execute/)
+      end
+
+      it "still refuses a denied execute" do
+        answers.push("y")
         denied = described_class.new(rules: { execute: :deny })
 
-        check = -> { Elelem::Tools.nested { denied.check("execute", {}, input: input) } }
-
-        expect(&check).to raise_error(/Permission denied/)
+        expect { run_tool(denied, "grep") }.to raise_error(/Permission denied: execute/)
       end
 
-      it "asks again once the tool is done" do
-        Elelem::Tools.nested { nil }
+      it "forgets the approval at the next tool" do
+        answers.push("y", "n")
+        permissions = described_class.new(rules: { list: :allow })
+        run_tool(permissions, "grep")
 
-        expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/)
+        expect { run_tool(permissions, "list") }.to raise_error(/User denied permission: execute/)
       end
     end
 

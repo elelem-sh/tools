@@ -18,14 +18,22 @@ module Elelem
 
       def check(tool_name, args, input:)
         policy = @rules[tool_name.to_sym] || :ask
-        case policy
-        when :allow then true
-        when :deny then raise "Permission denied: #{tool_name}"
-        else Tools.nested? || prompt(tool_name, args, input)
-        end
+        raise "Permission denied: #{tool_name}" if policy == :deny
+        return nested(tool_name, args, input, policy) if Tools.nested?
+
+        # Remember whether a person just saw and approved this call. Only then
+        # may the command it builds skip its own prompt.
+        Tools.approved = false
+        return true if policy == :allow
+
+        prompt(tool_name, args, input).tap { Tools.approved = input.interactive? }
       end
 
       private
+
+      def nested(tool_name, args, input, policy)
+        policy == :allow || Tools.approved? || prompt(tool_name, args, input)
+      end
 
       def load_config(path)
         return {} unless File.exist?(path)
