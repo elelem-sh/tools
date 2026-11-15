@@ -7,6 +7,10 @@ RSpec.describe Elelem::Tools::Permissions do
 
   describe "#check" do
     context "with default allow policies" do
+      it "allows verify, whose commands are still checked as execute" do
+        expect(subject.check("verify", { "path" => "a.rb" }, input: input)).to be true
+      end
+
       it "allows read without prompting" do
         expect(subject.check("read", {}, input: input)).to be true
         expect(input).not_to have_received(:ask)
@@ -42,6 +46,34 @@ RSpec.describe Elelem::Tools::Permissions do
         let(:answer) { "n" }
 
         it { expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/) }
+      end
+
+      context "when the answer is an empty line" do
+        let(:answer) { "" }
+
+        it { expect(subject.check("execute", {}, input: input)).to be true }
+      end
+
+      context "with arguments" do
+        let(:answer) { "y" }
+
+        it "shows the whole command" do
+          subject.check("execute", { "command" => "rg -n foo ." }, input: input)
+
+          expect(input).to have_received(:ask).with("  Allow execute `rg -n foo .`? [Y/n] > ")
+        end
+
+        it "escapes newlines so no line is hidden" do
+          subject.check("execute", { "command" => "ls\nrm -rf x" }, input: input)
+
+          expect(input).to have_received(:ask).with("  Allow execute `\"ls\\nrm -rf x\"`? [Y/n] > ")
+        end
+
+        it "shows other tools' arguments as JSON" do
+          subject.check("grep", { "pattern" => "foo" }, input: input)
+
+          expect(input).to have_received(:ask).with("  Allow grep `{\"pattern\":\"foo\"}`? [Y/n] > ")
+        end
       end
     end
 

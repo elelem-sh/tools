@@ -1,5 +1,6 @@
 {
   "execute": "ask",
   "read": "allow",
+  "verify": "allow",
   "write": "allow"
 }

@@ -35,13 +35,22 @@ module Elelem
         {}
       end
 
-      def prompt(tool_name, _args, input)
+      def prompt(tool_name, args, input)
         return true unless input.interactive?
 
-        answer = input.ask("  Allow? [Y/n] > ")&.downcase
-        raise "User denied permission: #{tool_name}" if answer == "n"
+        answer = input.ask("  Allow #{tool_name}#{subject(tool_name, args)}? [Y/n] > ")
+        raise "User denied permission: #{tool_name}" if answer&.downcase == "n"
 
         true
+      end
+
+      # The whole command, never cut, so nothing hidden gets approved.
+      def subject(tool_name, args)
+        return "" if args.nil? || args.empty?
+
+        command = args["command"] if tool_name.to_s == "execute"
+        text = command ? command.to_s : JSON.generate(args)
+        " `#{text.include?("\n") ? text.dump : text}`"
       end
 
       def default_rules
