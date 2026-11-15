@@ -7,7 +7,8 @@ module Elelem
     # command it builds does not ask again. When the outer call was allowed
     # without asking, the command still asks. A deny on execute always applies.
     # git is not one of them: repository config can make any git command run a
-    # program, so git always asks for its exact command line.
+    # program, so git is allowed by default and execute asks for its exact
+    # command line, once.
     def self.exec(toolbox, *args)
       command = args.flatten.map { |a| Shellwords.escape(a.to_s) }.join(" ")
       nested { toolbox.run("execute", { "command" => command }) }

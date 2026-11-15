@@ -1,5 +1,6 @@
 {
   "execute": "ask",
+  "git": "allow",
   "read": "allow",
   "verify": "allow",
   "write": "allow"
