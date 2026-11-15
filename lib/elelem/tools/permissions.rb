@@ -51,7 +51,8 @@ module Elelem
 
         command = args["command"] if tool_name.to_s == "execute"
         text = command ? command.to_s : JSON.generate(args)
-        " `#{text.include?("\n") ? text.dump : text}`"
+        # Control and format characters (\r, ESC, bidi overrides) could redraw the prompt.
+        " `#{text.match?(/[\p{Cc}\p{Cf}]/) ? text.dump : text}`"
       end
 
       def default_rules

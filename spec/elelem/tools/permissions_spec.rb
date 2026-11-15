@@ -75,6 +75,12 @@ RSpec.describe Elelem::Tools::Permissions do
           expect(input).to have_received(:ask).with("  Allow execute `\"ls\\nrm -rf x\"`? [Y/n] > ")
         end
 
+        it "escapes characters that could redraw the prompt" do
+          subject.check("execute", { "command" => "rm -rf ~ \r  Allow execute `ls" }, input: input)
+
+          expect(input).to have_received(:ask).with("  Allow execute `\"rm -rf ~ \\r  Allow execute `ls\"`? [Y/n] > ")
+        end
+
         it "shows other tools' arguments as JSON" do
           subject.check("grep", { "pattern" => "foo" }, input: input)
 
