@@ -48,6 +48,12 @@ RSpec.describe Elelem::Tools::Permissions do
         it { expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/) }
       end
 
+      context "at end of input" do
+        let(:answer) { nil }
+
+        it { expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/) }
+      end
+
       context "when the answer is an empty line" do
         let(:answer) { "" }
 

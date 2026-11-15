@@ -39,7 +39,8 @@ module Elelem
         return true unless input.interactive?
 
         answer = input.ask("  Allow #{tool_name}#{subject(tool_name, args)}? [Y/n] > ")
-        raise "User denied permission: #{tool_name}" if answer&.downcase == "n"
+        # nil is end of input (Ctrl+D), which refuses. An empty line accepts.
+        raise "User denied permission: #{tool_name}" if answer.nil? || answer.downcase == "n"
 
         true
       end
