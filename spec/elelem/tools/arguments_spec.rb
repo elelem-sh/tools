@@ -33,13 +33,49 @@ RSpec.describe "tool arguments that look like options" do
     expect(run_tool("list", { "path" => "-R" })).not_to be_ok
   end
 
-  it "git refuses options that run another program" do
-    [{ "command" => "-c", "args" => ["alias.x=!touch pwned", "x"] },
-     { "command" => "fetch", "args" => ["--upload-pack=touch pwned", "origin"] },
-     { "command" => "diff", "args" => ["--ext-diff"] }].each do |call|
-      expect(run_tool("git", call)[:error]).to match(/can run other programs/)
+  describe "git" do
+    it "treats only read-only commands without unsafe options as read-only" do
+      expect(Elelem::Tools.git_read_only?("status", ["--short"])).to be true
+      expect(Elelem::Tools.git_read_only?("log", ["-c", "--oneline"])).to be true
+      expect(Elelem::Tools.git_read_only?("diff", ["--ext-dif"])).to be false
+      expect(Elelem::Tools.git_read_only?("log", ["--outp=x"])).to be false
+      expect(Elelem::Tools.git_read_only?("show", ["-Ovim"])).to be false
+      %w[-c config rebase filter-branch submodule bisect difftool fetch clone add commit].each do |command|
+        expect(Elelem::Tools.git_read_only?(command, [])).to be false
+      end
     end
-    expect(File).not_to exist("pwned")
+
+    def executes_for(call)
+      seen = []
+      session.toolbox.before("execute") do |a|
+        seen << [a["command"], Elelem::Tools.nested?]
+        raise "stopped"
+      end
+      run_tool("git", call)
+      seen
+    end
+
+    it "runs anything else through execute's own prompt, even when git is approved" do
+      seen = executes_for({ "command" => "rebase", "args" => ["-xtouch pwned", "HEAD~1"] })
+
+      expect(seen).to eq([["git rebase -xtouch\\ pwned HEAD\\~1", false]])
+    end
+
+    it "runs a read-only command under the git approval, with program settings cleared" do
+      seen = executes_for({ "command" => "status", "args" => ["--short"] })
+
+      expect(seen.first.last).to be true
+      expect(seen.first.first).to start_with("git -c core.fsmonitor\\= -c core.hooksPath\\=/dev/null")
+    end
+
+    it "does not run a program set in .git/config for a read-only command" do
+      system("git", "init", "-q", ".")
+      system("git", "config", "core.fsmonitor", "touch pwned")
+
+      run_tool("git", { "command" => "status" })
+
+      expect(File).not_to exist("pwned")
+    end
   end
 
   it "git still runs ordinary commands" do
