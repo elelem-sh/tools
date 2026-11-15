@@ -6,16 +6,10 @@ Elelem.configure do |config|
                       description: "Run git command",
                       params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
                       required: ["command"]) do |args|
-      command = args["command"].to_s
-      rest = args["args"] || []
-      result =
-        if Elelem::Tools.git_read_only?(command, rest)
-          Elelem::Tools.exec(agent.toolbox, "git", *Elelem::Tools::GIT_SAFE_CONFIG, command, *rest)
-        else
-          # Asks for the exact command line, whatever the git call's policy.
-          line = ["git", command, *rest].map { |a| Shellwords.escape(a.to_s) }.join(" ")
-          agent.toolbox.run("execute", { "command" => line })
-        end
+      # Not Tools.exec: config (aliases, hooks, filters, textconv, signing) can
+      # make any git command run a program, so execute asks for the exact line.
+      line = ["git", args["command"], *(args["args"] || [])].map { |a| Shellwords.escape(a.to_s) }.join(" ")
+      result = agent.toolbox.run("execute", { "command" => line })
       next result if result.ok? || result[:error]
 
       result.to_h.merge(error: "git #{args["command"]} exited #{result[:exit_status]}")
