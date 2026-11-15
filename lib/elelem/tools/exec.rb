@@ -38,7 +38,7 @@ module Elelem
     def self.no_matches(result)
       return result unless result[:exit_status] == 1 && result[:content].to_s.strip.empty?
 
-      result.to_h.except(:ok).merge(content: "no matches")
+      result.to_h.except(:ok, :error).merge(content: "no matches")
     end
 
     # bash exits 127 when the command is not installed, 126 when it cannot run

@@ -38,12 +38,14 @@ Elelem.configure do |config|
       Verifiers.for(path).each_with_object({ verified: [] }) do |cmd, memo|
         agent.output.doing("execute", { "command" => cmd })
         v = agent.toolbox.run("execute", { "command" => cmd })
-        if v[:exit_status] != 0
-          break v.to_h.merge(path: path, command: cmd, error: v[:error] || "#{cmd} exited #{v[:exit_status]}")
-        end
+        break v.to_h.merge(path: path, command: cmd) unless v.ok?
 
         memo[:verified] << cmd
       end
+    end
+
+    agent.toolbox.after("write") do |_, result|
+      result[:verify] = agent.toolbox.run("verify", { "path" => result[:path] }).to_h unless result[:error]
     end
   end
 end

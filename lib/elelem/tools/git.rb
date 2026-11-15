@@ -9,10 +9,7 @@ Elelem.configure do |config|
       # Not Tools.exec: config (aliases, hooks, filters, textconv, signing) can
       # make any git command run a program, so execute asks for the exact line.
       line = ["git", args["command"], *(args["args"] || [])].map { |a| Shellwords.escape(a.to_s) }.join(" ")
-      result = agent.toolbox.run("execute", { "command" => line })
-      next result if result.ok? || result[:error]
-
-      result.to_h.merge(error: "git #{args["command"]} exited #{result[:exit_status]}")
+      agent.toolbox.run("execute", { "command" => line })
     end
 
     agent.toolbox.after("git") do |_, result|

@@ -7,7 +7,7 @@ RSpec.describe "the git tool" do
     result = run_tool("git", { "command" => "log" })
 
     expect(result).not_to be_ok
-    expect(result[:error]).to match(/\Agit log exited \d+\z/)
+    expect(result[:error]).to include(result[:exit_status].to_s)
   end
 
   it "passes a working git command through" do
@@ -25,7 +25,7 @@ RSpec.describe "the git tool" do
       define_method(:interactive?) { true }
       define_method(:ask) { |text| prompts << text and "y" }
     end.new
-    session = Elelem::Config.build_session("stub", input: input, output: Elelem::NullOutput.new)
+    session = Elelem::Config.build_session("demo", input: input, output: Elelem::NullOutput.new)
 
     expect(session.toolbox.run("git", { "command" => "status" })).to be_ok
     expect(prompts).to eq(["  Allow execute `git status`? [Y/n] > "])

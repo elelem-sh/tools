@@ -2,7 +2,7 @@
 
 module SessionHelper
   def session
-    @session ||= Elelem::Config.build_session("stub", input: Elelem::NullInput.new, output: Elelem::NullOutput.new)
+    @session ||= Elelem::Config.build_session("demo", input: Elelem::NullInput.new, output: Elelem::NullOutput.new)
   end
 
   def run_tool(name, args)
