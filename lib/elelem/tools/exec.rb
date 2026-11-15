@@ -31,6 +31,17 @@ module Elelem
       Thread.current[:elelem_tools_approved] = value
     end
 
+    # git options that run another program. The command itself may not be an
+    # option either, or `-c alias.x=!cmd x` would run cmd.
+    GIT_RUNS_PROGRAMS = %w[-c --config-env --exec-path --upload-pack --receive-pack -u --ext-diff --textconv
+                           --output -O --open-files-in-pager --extcmd -x --exec].freeze
+
+    def self.unsafe_git(command, args)
+      return command if command.to_s.start_with?("-")
+
+      args.map(&:to_s).find { |arg| GIT_RUNS_PROGRAMS.any? { |opt| arg == opt || arg.start_with?("#{opt}=") } }
+    end
+
     # rg and grep exit 1 when nothing matches. That is an answer, not a failure.
     def self.no_matches(result)
       return result unless result[:exit_status] == 1 && result[:content].to_s.strip.empty?

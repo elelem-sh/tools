@@ -6,6 +6,9 @@ Elelem.configure do |config|
                       description: "Run git command",
                       params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
                       required: ["command"]) do |args|
+      refused = Elelem::Tools.unsafe_git(args["command"], args["args"] || [])
+      next { error: "git #{refused} can run other programs; use execute so the command is shown" } if refused
+
       result = Elelem::Tools.exec(agent.toolbox, "git", args["command"], *(args["args"] || []))
       next result if result.ok? || result[:error]
 
