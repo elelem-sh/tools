@@ -7,8 +7,10 @@ Elelem.configure do |config|
                       params: { path: { type: "string" }, old: { type: "string" }, new: { type: "string" } },
                       required: %w[path old new]) do |args|
       content = Pathname.new(args["path"]).expand_path.read
-      count = args["old"].empty? ? 0 : content.scan(args["old"]).size
-      next { error: count.zero? ? "old not found" : "old matches #{count} times; include more context" } if count != 1
+      first = content.index(args["old"]) unless args["old"].empty?
+      next { error: "old not found" } unless first
+      # index also finds overlapping matches, and copes with invalid bytes.
+      next { error: "old matches more than once; include more context" } if content.index(args["old"], first + 1)
 
       # The block form takes new literally, so \0 and \1 are not expanded.
       agent.toolbox

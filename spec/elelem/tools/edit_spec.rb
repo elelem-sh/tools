@@ -16,7 +16,20 @@ RSpec.describe "the edit tool" do
   end
 
   it "fails when old matches more than once" do
-    expect(run_tool("edit", { "path" => "a.txt", "old" => "two", "new" => "2" })[:error]).to match(/matches 2 times/)
+    expect(run_tool("edit", { "path" => "a.txt", "old" => "two", "new" => "2" })[:error]).to match(/more than once/)
+  end
+
+  it "counts overlapping matches" do
+    File.write("a.txt", "aaa")
+
+    expect(run_tool("edit", { "path" => "a.txt", "old" => "aa", "new" => "b" })[:error]).to match(/more than once/)
+  end
+
+  it "edits a file with bytes that are not UTF-8" do
+    File.binwrite("a.txt", "caf\xE9 one")
+    run_tool("edit", { "path" => "a.txt", "old" => "one", "new" => "1" })
+
+    expect(File.binread("a.txt")).to eq("caf\xE9 1".b)
   end
 
   it "takes new literally" do
