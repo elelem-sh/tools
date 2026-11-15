@@ -105,6 +105,29 @@ RSpec.describe Elelem::Tools::Permissions do
       end
     end
 
+    context "inside a tool that runs its own command" do
+      let(:input) { double(ask: "n", interactive?: true) }
+
+      it "does not ask again" do
+        expect(Elelem::Tools.nested { subject.check("execute", {}, input: input) }).to be true
+        expect(input).not_to have_received(:ask)
+      end
+
+      it "still refuses a denied tool" do
+        denied = described_class.new(rules: { execute: :deny })
+
+        check = -> { Elelem::Tools.nested { denied.check("execute", {}, input: input) } }
+
+        expect(&check).to raise_error(/Permission denied/)
+      end
+
+      it "asks again once the tool is done" do
+        Elelem::Tools.nested { nil }
+
+        expect { subject.check("execute", {}, input: input) }.to raise_error(/User denied permission/)
+      end
+    end
+
     context "with a misspelled policy on an interactive input" do
       subject { described_class.new(rules: { execute: :dney }) }
 

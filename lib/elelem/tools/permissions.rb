@@ -21,7 +21,7 @@ module Elelem
         case policy
         when :allow then true
         when :deny then raise "Permission denied: #{tool_name}"
-        else prompt(tool_name, args, input)
+        else Tools.nested? || prompt(tool_name, args, input)
         end
       end
 
