@@ -12,7 +12,7 @@ Elelem.configure do |config|
       rg_args = ["rg", "-n", args["pattern"], path]
       rg_args += ["-g", glob] if glob
       result = Elelem::Tools.exec(agent.toolbox, *rg_args)
-      next result if result[:ok]
+      next result unless Elelem::Tools.missing?(result)
 
       grep_args = ["grep", "-rn"]
       grep_args += ["--include", glob] if glob
