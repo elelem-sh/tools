@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "shellwords"
+
 class Verifiers
   SYNTAX = {
     ".rb" => "ruby -c %{path}",
@@ -16,7 +18,7 @@ class Verifiers
 
     cmds = []
     ext = File.extname(path)
-    cmds << format(SYNTAX[ext], path: path) if SYNTAX[ext]
+    cmds << format(SYNTAX[ext], path: Shellwords.escape(path)) if SYNTAX[ext]
     cmds << test_runner
     cmds.compact
   end

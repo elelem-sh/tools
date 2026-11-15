@@ -16,4 +16,12 @@ RSpec.describe "the verify tool" do
 
     expect(run_tool("verify", { "path" => "good.rb" })[:verified]).to eq(["ruby -c good.rb"])
   end
+
+  it "passes the path to the shell as one word" do
+    path = "a b; touch pwned.rb"
+    File.write(path, "1")
+
+    expect(run_tool("verify", { "path" => path })).to be_ok
+    expect(File).not_to exist("pwned.rb")
+  end
 end
