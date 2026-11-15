@@ -6,7 +6,10 @@ Elelem.configure do |config|
                       description: "Run git command",
                       params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },
                       required: ["command"]) do |args|
-      Elelem::Tools.exec(agent.toolbox, "git", args["command"], *(args["args"] || []))
+      result = Elelem::Tools.exec(agent.toolbox, "git", args["command"], *(args["args"] || []))
+      next result if result.ok? || result[:error]
+
+      result.to_h.merge(error: "git #{args["command"]} exited #{result[:exit_status]}")
     end
 
     agent.toolbox.after("git") do |_, result|

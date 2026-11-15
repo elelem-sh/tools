@@ -33,7 +33,8 @@ RSpec.describe "the grep and glob fallbacks" do
     File.chmod(0o755, File.join(@bin, "rg"))
     result = run_tool("grep", { "pattern" => "needle" })
 
-    expect([result[:exit_status], result[:content]]).to eq([1, ""])
+    expect([result[:exit_status], result[:content]]).to eq([1, "no matches"])
+    expect(result).to be_ok
   end
 
   it "greps with grep when rg is not installed" do

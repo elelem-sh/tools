@@ -23,6 +23,13 @@ module Elelem
       Thread.current[:elelem_tools_nested] == true
     end
 
+    # rg and grep exit 1 when nothing matches. That is an answer, not a failure.
+    def self.no_matches(result)
+      return result unless result[:exit_status] == 1 && result[:content].to_s.strip.empty?
+
+      result.to_h.except(:ok).merge(content: "no matches")
+    end
+
     # bash exits 127 when the command is not installed, 126 when it cannot run
     # it. rg exits 1 when nothing matches, which is not a reason to fall back.
     def self.missing?(result)
