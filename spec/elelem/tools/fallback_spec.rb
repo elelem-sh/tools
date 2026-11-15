@@ -20,6 +20,14 @@ RSpec.describe "the grep and glob fallbacks" do
     end
   end
 
+  it "falls back when rg is there but cannot run" do
+    File.binwrite(File.join(@bin, "rg"), "\x7FELF\x00\x00")
+    File.chmod(0o755, File.join(@bin, "rg"))
+    result = run_tool("grep", { "pattern" => "needle" })
+
+    expect(result[:content]).to include("notes.txt")
+  end
+
   it "does not fall back when rg runs and finds nothing" do
     File.write(File.join(@bin, "rg"), "#!/bin/sh\nexit 1\n")
     File.chmod(0o755, File.join(@bin, "rg"))
