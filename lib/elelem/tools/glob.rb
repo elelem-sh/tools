@@ -2,7 +2,7 @@
 
 Elelem.configure do |config|
   config.setup(:glob) do |agent|
-    next unless Elelem::Builtins.shell == :bash
+    next unless Elelem::Tools.bash?
 
     agent.toolbox.add("glob",
                       description: "Find files matching pattern",

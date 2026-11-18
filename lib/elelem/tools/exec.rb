@@ -14,6 +14,8 @@ module Elelem
       nested { toolbox.run("execute", { "command" => command }) }
     end
 
+    def self.bash? = Elelem::Builtins.shell == :bash
+
     def self.nested
       outer = Thread.current[:elelem_tools_nested]
       Thread.current[:elelem_tools_nested] = true
