@@ -2,6 +2,8 @@
 
 Elelem.configure do |config|
   config.setup(:shell) do |agent|
+    next if Gem.win_platform?
+
     strip_ansi = lambda do |text|
       text
         .gsub(/^Script started.*?\n/, "")

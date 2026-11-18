@@ -2,6 +2,8 @@
 
 Elelem.configure do |config|
   config.setup(:grep) do |agent|
+    next unless Elelem::Builtins.shell == :bash
+
     agent.toolbox.add("grep",
                       description: "Search file contents",
                       params: { pattern: { type: "string" }, path: { type: "string" }, glob: { type: "string" } },

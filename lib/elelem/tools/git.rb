@@ -2,6 +2,8 @@
 
 Elelem.configure do |config|
   config.setup(:git) do |agent|
+    next unless Elelem::Builtins.shell == :bash
+
     agent.toolbox.add("git",
                       description: "Run git command",
                       params: { command: { type: "string" }, args: { type: "array", items: { type: "string" } } },

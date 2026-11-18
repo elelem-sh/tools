@@ -2,6 +2,8 @@
 
 Elelem.configure do |config|
   config.setup(:list) do |agent|
+    next unless Elelem::Builtins.shell == :bash
+
     agent.toolbox.add("list",
                       description: "List directory contents",
                       params: { path: { type: "string" }, recursive: { type: "boolean" } },

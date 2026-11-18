@@ -30,6 +30,8 @@ end
 
 Elelem.configure do |config|
   config.setup(:verify) do |agent|
+    next unless Elelem::Builtins.shell == :bash
+
     agent.toolbox.add("verify",
                       description: "Verify file syntax and run tests",
                       params: { path: { type: "string" } },

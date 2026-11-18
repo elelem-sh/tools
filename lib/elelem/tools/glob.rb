@@ -2,6 +2,8 @@
 
 Elelem.configure do |config|
   config.setup(:glob) do |agent|
+    next unless Elelem::Builtins.shell == :bash
+
     agent.toolbox.add("glob",
                       description: "Find files matching pattern",
                       params: { pattern: { type: "string" }, path: { type: "string" } },
