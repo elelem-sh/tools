@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/elelem-sh/tools/compare/v0.3.1...v0.3.2) (2026-11-18)
+
+
+### Bug Fixes
+
+* register git, glob, grep, list and verify only when execute runs in bash ([c59a754](https://github.com/elelem-sh/tools/commit/c59a754fa4b7e8b18db2893571dafd1a0794ab42))
+
 ## [0.3.1](https://github.com/elelem-sh/tools/compare/v0.3.0...v0.3.1) (2026-11-18)
 
 
