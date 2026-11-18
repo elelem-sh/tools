@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/elelem-sh/tools/compare/v0.3.0...v0.3.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* **deps:** drop pathname and accept the json that Ruby 4.0 ships ([040da50](https://github.com/elelem-sh/tools/commit/040da50fda52accce3f48e5f0a14697285f44c78))
+
 ## [0.3.0](https://github.com/elelem-sh/tools/compare/v0.2.0...v0.3.0) (2026-11-15)
 
 
