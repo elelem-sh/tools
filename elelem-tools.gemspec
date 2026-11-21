@@ -18,12 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/elelem-sh/tools"
   spec.metadata["rubygems_mfa_required"] = "true"
 
-  gemspec = File.basename(__FILE__)
-  spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
-    ls.readlines("\x0", chomp: true).reject do |f|
-      (f == gemspec) || f.start_with?(*%w[bin/ Gemfile .gitignore])
-    end
-  end
+  spec.files = Dir["LICENSE.txt", "lib/**/*.rb", "lib/elelem/tools/permissions.json"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "elelem", ">= 0.14.4", "< 1"
