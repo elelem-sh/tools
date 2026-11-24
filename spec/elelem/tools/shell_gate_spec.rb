@@ -4,7 +4,8 @@ RSpec.describe "tools that need bash" do
   after { Elelem::Builtins.finder = nil }
 
   def tool_names(windows)
-    Elelem::Builtins.finder = Elelem::Builtins::Shell.new(env: { "PATH" => "" }, windows: windows)
+    path = windows ? "" : ENV.fetch("PATH")
+    Elelem::Builtins.finder = Elelem::Builtins::Shell.new(env: { "PATH" => path }, windows: windows)
     Elelem::Config.build_session("demo", input: Elelem::NullInput.new, output: Elelem::NullOutput.new)
                   .toolbox.to_a.map { |tool| tool.dig(:function, :name) }
   end
