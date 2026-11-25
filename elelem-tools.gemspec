@@ -8,8 +8,9 @@ Gem::Specification.new do |spec|
   spec.authors = ["mo khan"]
   spec.email = ["mo@mokhan.ca"]
 
-  spec.summary = "Optional tools for elelem."
-  spec.description = "Adds tools to elelem."
+  spec.summary = "More tools for elelem. Permission prompts."
+  spec.description = "Adds search, edit, git, sub-agent and verification tools, slash commands, " \
+                     "and a hook that asks before a tool runs."
   spec.homepage = "https://elelem.sh"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 4.0.0"
